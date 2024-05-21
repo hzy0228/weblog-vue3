@@ -37,7 +37,8 @@
                     </el-form-item>
                     <el-form-item>
                         <!-- 登录按钮，宽度设置为 100% -->
-                        <el-button class="w-full mt-2" size="large" type="primary" @click="onSubmit">登录</el-button>
+                        <el-button class="w-full mt-2" size="large" :loading="loading" type="primary"
+                            @click="onSubmit">登录</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -49,15 +50,19 @@
 // 引入 Element Plus 中的用户、锁图标
 import { User, Lock } from '@element-plus/icons-vue'
 import { login } from '@/api/admin/user'
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
+import { setToken } from '@/composables/auth'
 import { useRouter } from 'vue-router';
-
+import { showMessage } from '@/composables/util';
 
 
 const router = useRouter()
+// 登录按钮加载
+const loading = ref(false)
 
 // 表单引用
 const formRef = ref(null)
+
 
 // 表单验证规则
 const rules = {
@@ -92,14 +97,55 @@ const onSubmit = () => {
             console.log('表单验证不通过')
             return false
         }
+
+        // 开始加载
+        loading.value = true
+
+        // 调用登录接口
         login(form.username, form.password).then((res) => {
             console.log(res)
             // 判断是否成功
             if (res.data.success == true) {
+
+                // 提示登录成功
+                showMessage("登录成功")
+
+                // 存储 Token 到 Cookie 中
+                let token = res.data.token
+                setToken(token)
+
                 // 跳转到后台首页
                 router.push('/admin/index')
+
+            } else {
+                // 获取服务端返回的错误消息
+                let message = res.message
+                // 提示消息
+                showMessage(message, 'error')
             }
+        }).finally(() => {
+            // 结束加载
+            loading.value = false
         })
     })
 }
+
+// 按回车键后，执行登录事件
+function onKeyUp(e) {
+    console.log(e)
+    if (e.key == 'Enter') {
+        onSubmit()
+    }
+}
+
+// 添加键盘监听
+onMounted(() => {
+    console.log('添加键盘监听')
+    document.addEventListener('keyup', onKeyUp)
+})
+
+// 移除键盘监听
+onBeforeUnmount(() => {
+    document.removeEventListener('keyup', onKeyUp)
+})
 </script>
