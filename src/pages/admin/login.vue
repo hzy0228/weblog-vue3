@@ -52,8 +52,8 @@ import { User, Lock } from '@element-plus/icons-vue'
 import { login } from '@/api/admin/user'
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
 import { setToken } from '@/composables/auth'
-import { useRouter } from 'vue-router';
-import { showMessage } from '@/composables/util';
+import { useRouter } from 'vue-router'
+import { showMessage } from '@/composables/util'
 
 
 const router = useRouter()
@@ -105,7 +105,7 @@ const onSubmit = () => {
         login(form.username, form.password).then((res) => {
             console.log(res)
             // 判断是否成功
-            if (res.data.success == true) {
+            if (res.success == true) {
 
                 // 提示登录成功
                 showMessage("登录成功")
