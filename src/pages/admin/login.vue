@@ -51,10 +51,12 @@
 import { User, Lock } from '@element-plus/icons-vue'
 import { login } from '@/api/admin/user'
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
-import { setToken } from '@/composables/auth'
+import { setToken } from '@/composables/cookie'
 import { useRouter } from 'vue-router'
 import { showMessage } from '@/composables/util'
+import { useUserStore } from '@/stores/user'
 
+const userStore = useUserStore()
 
 const router = useRouter()
 // 登录按钮加载
@@ -113,6 +115,9 @@ const onSubmit = () => {
                 // 存储 Token 到 Cookie 中
                 let token = res.data.token
                 setToken(token)
+
+                // 获取用户信息，并存储到全局状态中
+                userStore.setUserInfo()
 
                 // 跳转到后台首页
                 router.push('/admin/index')
