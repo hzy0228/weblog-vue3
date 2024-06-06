@@ -22,7 +22,7 @@
         <el-card shadow="never">
             <!-- 新增按钮 -->
             <div class="mb-5">
-                <el-button type="primary" @click="dialogVisible = true">
+                <el-button type="primary" @click="addCategoryBtnClick">
                     <el-icon class="mr-1">
                         <Plus />
                     </el-icon>
@@ -35,7 +35,7 @@
                 <el-table-column prop="createTime" label="创建时间" width="180" />
                 <el-table-column label="操作">
                     <template #default="scope">
-                        <el-button type="danger" size="small">
+                        <el-button type="danger" size="small" @click="deleteCategorySubmit(scope.row)">
                             <el-icon class="mr-1">
                                 <Delete />
                             </el-icon>
@@ -53,26 +53,35 @@
                 @size-change="handleSizeChange" @current-change="getTableData" />
         </div>
 
+
         <!-- 添加分类 -->
+        <!--
         <el-dialog v-model="dialogVisible" title="添加文章分类" width="40%" :draggable="true" :close-on-click-modal="false"
             :close-on-press-escape="false">
             <el-form ref="formRef" :rules="rules" :model="form">
                 <el-form-item label="分类名称" prop="name" label-width="80px">
-                    <!-- 输入框组件 -->
-                    <el-input size="large" v-model="form.name" placeholder="请输入分类名称" maxlength="20" show-word-limit
-                        clearable />
+        <el-input size="large" v-model="form.name" placeholder="请输入分类名称" maxlength="20" show-word-limit clearable />
+        </el-form-item>
+        </el-form>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="onSubmit">
+                    提交
+                </el-button>
+            </span>
+        </template>
+        </el-dialog> -->
+
+
+        <!-- 添加分类 -->
+        <FormDialog ref="formDialogRef" title="添加文章分类" destroyOnClose @submit="onSubmit">
+            <el-form ref="formRef" :rules="rules" :model="form">
+                <el-form-item label="分类名称" prop="name" label-width="80px" size="large">
+                    <el-input v-model="form.name" placeholder="请输入分类名称" maxlength="20" show-word-limit clearable />
                 </el-form-item>
             </el-form>
-            <template #footer>
-                <span class="dialog-footer">
-                    <el-button @click="dialogVisible = false">取消</el-button>
-                    <el-button type="primary" @click="onSubmit">
-                        提交
-                    </el-button>
-                </span>
-            </template>
-        </el-dialog>
-
+        </FormDialog>
     </div>
 </template>
 
@@ -81,8 +90,12 @@
 import { Search, RefreshRight } from '@element-plus/icons-vue'
 import { ref, reactive } from 'vue'
 import moment from 'moment'
-import { getCategoryPageList, addCategory } from '@/api/admin/category'
-import { showMessage } from '@/composables/util'
+import { getCategoryPageList, addCategory, deleteCategory } from '@/api/admin/category'
+import { showMessage, showModel } from '@/composables/util'
+import FormDialog from '@/components/FormDialog.vue'
+
+
+
 
 // 分页查询的分类名称
 const searchCategoryName = ref('')
@@ -104,13 +117,18 @@ const tableData = ref([])
 
 
 // 对话框是否显示
-const dialogVisible = ref(false)
+// const dialogVisible = ref(false)
+const formDialogRef = ref(null)
 
+// 新增分类按钮点击事件
+const addCategoryBtnClick = () => {
+    formDialogRef.value.open()
+}
 
 // 表单引用
 const formRef = ref(null)
 
-// 修改用户密码表单对象
+// 添加文章分类表单对象
 const form = reactive({
     name: ''
 })
@@ -142,7 +160,7 @@ const onSubmit = () => {
                 // 将表单中分类名称置空
                 form.name = ''
                 // 隐藏对话框
-                dialogVisible.value = false
+                formDialogRef.value.close()
                 // 重新请求分页接口，渲染数据
                 getTableData()
             } else {
@@ -216,6 +234,25 @@ function getTableData() {
 }
 getTableData()
 
+
+const deleteCategorySubmit = (row) => {
+    console.log(row.id)
+    showModel('是否确定要删除该分类？').then(() => {
+        deleteCategory(row.id).then(
+            (res) => {
+                if (res.success == true) {
+                    showMessage("删除成功")
+                    getTableData()
+                } else {
+                    let message = res.message
+                    showMessage(message, 'error')
+                }
+            }
+        )
+    }).catch(() => {
+        console.log('取消了')
+    })
+}
 
 // 重置查询条件
 const reset = () => {
