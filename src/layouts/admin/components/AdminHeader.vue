@@ -53,12 +53,13 @@
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
-            <!-- 修改密码 -->
-            <el-dialog v-model="dialogVisible" title="修改密码" width="40%" :draggable="true" :close-on-click-modal="false"
+
+
+
+            <!-- <el-dialog v-model="dialogVisible" title="修改密码" width="40%" :draggable="true" :close-on-click-modal="false"
                 :close-on-press-escape="false">
                 <el-form ref="formRef" :rules="rules" :model="form">
                     <el-form-item label="用户名" prop="username" label-width="120px">
-                        <!-- 输入框组件 -->
                         <el-input size="large" v-model="form.username" placeholder="请输入用户名" clearable disabled />
                     </el-form-item>
                     <el-form-item label="密码" prop="password" label-width="120px">
@@ -78,7 +79,25 @@
                         </el-button>
                     </span>
                 </template>
-            </el-dialog>
+            </el-dialog> -->
+
+            <!-- 修改密码 -->
+            <FormDialog ref="formDialogRef" title="修改密码" destroyOnClose @submit="onSubmit">
+                <el-form ref="formRef" :rules="rules" :model="form">
+                    <el-form-item label="用户名" prop="username" label-width="120px">
+                        <el-input size="large" v-model="form.username" placeholder="请输入用户名" clearable disabled />
+                    </el-form-item>
+                    <el-form-item label="密码" prop="password" label-width="120px">
+                        <el-input size="large" type="password" v-model="form.password" placeholder="请输入密码" clearable
+                            show-password />
+                    </el-form-item>
+                    <el-form-item label="确认密码" prop="rePassword" label-width="120px">
+                        <el-input size="large" type="password" v-model="form.rePassword" placeholder="请确认密码" clearable
+                            show-password />
+                    </el-form-item>
+                </el-form>
+            </FormDialog>
+
         </div>
     </div>
 </template>
@@ -122,7 +141,9 @@ watch(() => userStore.userInfo.username, (newValue, oldValue) => {
 });
 
 // 对话框是否显示
-const dialogVisible = ref(false)
+// const dialogVisible = ref(false)
+const formDialogRef = ref(null)
+
 // 表单引用
 const formRef = ref(null)
 
@@ -163,7 +184,7 @@ const handleCommand = (command) => {
     // 更新密码
     if (command == 'updatePassword') {
         // 显示修改密码对话框
-        dialogVisible.value = true
+        formDialogRef.value.open()
     } else if (command == 'logout') { // 退出登录
         logout()
     }
@@ -192,6 +213,9 @@ const onSubmit = () => {
             return
         }
 
+        // 显示提交按钮 loading
+        formDialogRef.value.showBtnLoading()
+
         // 调用修改用户密码接口
         updateAdminPassword(form).then((res) => {
             console.log(res)
@@ -202,7 +226,7 @@ const onSubmit = () => {
                 userStore.logout()
 
                 // 隐藏对话框
-                dialogVisible.value = false
+                formDialogRef.value.close()
 
                 // 跳转登录页
                 router.push('/login')
@@ -212,7 +236,8 @@ const onSubmit = () => {
                 // 提示消息
                 showMessage(message, 'error')
             }
-        })
+        }).finally(() => formDialogRef.value.closeBtnLoading()) // 隐藏提交按钮 loading
+
     })
 }
 </script>
