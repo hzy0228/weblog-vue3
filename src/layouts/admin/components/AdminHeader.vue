@@ -1,62 +1,64 @@
 <template>
-    <!-- 通过 flex 指定水平布局 -->
-    <!-- 设置背景色为白色、高度为 64px，padding-right 为 4， border-bottom 为 slate 200 -->
-    <div class="bg-white h-[64px] flex pr-4 border-b border-slate-100">
-        <!-- 左边栏收缩、展开 -->
-        <div class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 hover:bg-gray-200"
-            @click="handleMenuWidth">
-            <el-icon>
-                <Fold v-if="menuStore.menuWidth == '250px'" />
-                <Expand v-else />
-            </el-icon>
-        </div>
+    <!-- 固钉组件，通过设置 offset 属性来改变吸顶距离，默认值为 0。 -->
+    <el-affix :offset="0">
+        <!-- 通过 flex 指定水平布局 -->
+        <!-- 设置背景色为白色、高度为 64px，padding-right 为 4， border-bottom 为 slate 200 -->
+        <div class="bg-white h-[64px] flex pr-4 border-b border-slate-100">
+            <!-- 左边栏收缩、展开 -->
+            <div class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 hover:bg-gray-200"
+                @click="handleMenuWidth">
+                <el-icon>
+                    <Fold v-if="menuStore.menuWidth == '250px'" />
+                    <Expand v-else />
+                </el-icon>
+            </div>
 
 
 
-        <!-- 右边容器，通过 ml-auto 让其在父容器的右边 -->
-        <div class="ml-auto flex">
-            <!-- 点击刷新页面 -->
-            <el-tooltip class="box-item" effect="dark" content="刷新" placement="bottom">
-                <div class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 hover:bg-gray-200"
-                    @click="handleRefresh">
-                    <el-icon>
-                        <Refresh />
-                    </el-icon>
-                </div>
-            </el-tooltip>
-            <!-- 点击全屏展示 -->
-            <el-tooltip class="box-item" effect="dark" content="全屏" placement="bottom">
-                <div class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 mr-2 hover:bg-gray-200"
-                    @click="toggle">
-                    <el-icon>
-                        <FullScreen v-if="!isFullscreen" />
-                        <Aim v-else />
-                    </el-icon>
-                </div>
-            </el-tooltip>
+            <!-- 右边容器，通过 ml-auto 让其在父容器的右边 -->
+            <div class="ml-auto flex">
+                <!-- 点击刷新页面 -->
+                <el-tooltip class="box-item" effect="dark" content="刷新" placement="bottom">
+                    <div class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 hover:bg-gray-200"
+                        @click="handleRefresh">
+                        <el-icon>
+                            <Refresh />
+                        </el-icon>
+                    </div>
+                </el-tooltip>
+                <!-- 点击全屏展示 -->
+                <el-tooltip class="box-item" effect="dark" content="全屏" placement="bottom">
+                    <div class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 mr-2 hover:bg-gray-200"
+                        @click="toggle">
+                        <el-icon>
+                            <FullScreen v-if="!isFullscreen" />
+                            <Aim v-else />
+                        </el-icon>
+                    </div>
+                </el-tooltip>
 
-            <!-- 登录用户头像 -->
-            <el-dropdown class="flex items-center justify-center" @command="handleCommand">
-                <span class="el-dropdown-link flex items-center justify-center text-gray-700 text-xs">
-                    <!-- 头像 Avatar -->
-                    <el-avatar class="mr-2" :size="25"
-                        src="https://ts1.cn.mm.bing.net/th/id/R-C.a82cacd82f0b8c5f1cdff5076c63a8a0?rik=zcJV6nqfw6VEGA&riu=http%3a%2f%2fimg.touxiangwu.com%2fzb_users%2fupload%2f2022%2f11%2f202211071667784726554505.jpg&ehk=dGyfrgl5tcgkd7RwQxlnw10tUHODWly%2fffsx5HThmEE%3d&risl=&pid=ImgRaw&r=0" />
-                    {{ userStore.userInfo.username }}
-                    <el-icon class="el-icon--right">
-                        <arrow-down />
-                    </el-icon>
-                </span>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item command="updatePassword">修改密码</el-dropdown-item>
-                        <el-dropdown-item command="logout">退出登录</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
+                <!-- 登录用户头像 -->
+                <el-dropdown class="flex items-center justify-center" @command="handleCommand">
+                    <span class="el-dropdown-link flex items-center justify-center text-gray-700 text-xs">
+                        <!-- 头像 Avatar -->
+                        <el-avatar class="mr-2" :size="25"
+                            src="https://ts1.cn.mm.bing.net/th/id/R-C.a82cacd82f0b8c5f1cdff5076c63a8a0?rik=zcJV6nqfw6VEGA&riu=http%3a%2f%2fimg.touxiangwu.com%2fzb_users%2fupload%2f2022%2f11%2f202211071667784726554505.jpg&ehk=dGyfrgl5tcgkd7RwQxlnw10tUHODWly%2fffsx5HThmEE%3d&risl=&pid=ImgRaw&r=0" />
+                        {{ userStore.userInfo.username }}
+                        <el-icon class="el-icon--right">
+                            <arrow-down />
+                        </el-icon>
+                    </span>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item command="updatePassword">修改密码</el-dropdown-item>
+                            <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
 
 
 
-            <!-- <el-dialog v-model="dialogVisible" title="修改密码" width="40%" :draggable="true" :close-on-click-modal="false"
+                <!-- <el-dialog v-model="dialogVisible" title="修改密码" width="40%" :draggable="true" :close-on-click-modal="false"
                 :close-on-press-escape="false">
                 <el-form ref="formRef" :rules="rules" :model="form">
                     <el-form-item label="用户名" prop="username" label-width="120px">
@@ -81,25 +83,26 @@
                 </template>
             </el-dialog> -->
 
-            <!-- 修改密码 -->
-            <FormDialog ref="formDialogRef" title="修改密码" destroyOnClose @submit="onSubmit">
-                <el-form ref="formRef" :rules="rules" :model="form">
-                    <el-form-item label="用户名" prop="username" label-width="120px">
-                        <el-input size="large" v-model="form.username" placeholder="请输入用户名" clearable disabled />
-                    </el-form-item>
-                    <el-form-item label="密码" prop="password" label-width="120px">
-                        <el-input size="large" type="password" v-model="form.password" placeholder="请输入密码" clearable
-                            show-password />
-                    </el-form-item>
-                    <el-form-item label="确认密码" prop="rePassword" label-width="120px">
-                        <el-input size="large" type="password" v-model="form.rePassword" placeholder="请确认密码" clearable
-                            show-password />
-                    </el-form-item>
-                </el-form>
-            </FormDialog>
+                <!-- 修改密码 -->
+                <FormDialog ref="formDialogRef" title="修改密码" destroyOnClose @submit="onSubmit">
+                    <el-form ref="formRef" :rules="rules" :model="form">
+                        <el-form-item label="用户名" prop="username" label-width="120px">
+                            <el-input size="large" v-model="form.username" placeholder="请输入用户名" clearable disabled />
+                        </el-form-item>
+                        <el-form-item label="密码" prop="password" label-width="120px">
+                            <el-input size="large" type="password" v-model="form.password" placeholder="请输入密码" clearable
+                                show-password />
+                        </el-form-item>
+                        <el-form-item label="确认密码" prop="rePassword" label-width="120px">
+                            <el-input size="large" type="password" v-model="form.rePassword" placeholder="请确认密码"
+                                clearable show-password />
+                        </el-form-item>
+                    </el-form>
+                </FormDialog>
 
+            </div>
         </div>
-    </div>
+    </el-affix>
 </template>
 
 <script setup>
