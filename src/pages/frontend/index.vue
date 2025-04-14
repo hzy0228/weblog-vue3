@@ -85,7 +85,6 @@
 <script setup>
 import { onMounted } from 'vue'
 import { initCollapses } from 'flowbite'
-import {createRouter as $router} from "vue-router";
 
 // 初始化 flowbit 相关组件
 onMounted(() => {
