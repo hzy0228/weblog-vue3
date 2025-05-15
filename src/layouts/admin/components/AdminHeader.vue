@@ -1,43 +1,45 @@
 <template>
-  <!-- 设置背景色为白色、高度为 64px，padding-right 为 4， border-bottom 为 slate 200 -->
-  <div class="bg-white h-[64px] flex pr-4 border-b border-slate-100">
-    <!-- 左边栏收缩、展开 -->
-    <div class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 hover:bg-gray-200"
-         @click="handleMenuWidth">
-      <el-icon>
-        <Fold v-if="menuStore.menuWidth == '250px'"/>
-        <Expand v-else/>
-      </el-icon>
-    </div>
+  <!-- 固钉组件，通过设置 offset 属性来改变吸顶距离，默认值为 0。 -->
+  <el-affix :offset="0">
+    <!-- 设置背景色为白色、高度为 64px，padding-right 为 4， border-bottom 为 slate 200 -->
+    <div class="bg-white h-[64px] flex pr-4 border-b border-slate-100">
+      <!-- 左边栏收缩、展开 -->
+      <div class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 hover:bg-gray-200"
+           @click="handleMenuWidth">
+        <el-icon>
+          <Fold v-if="menuStore.menuWidth == '250px'"/>
+          <Expand v-else/>
+        </el-icon>
+      </div>
 
 
-    <!-- 右边容器 -->
-    <div class="ml-auto flex">
-      <!-- 点击刷新页面 -->
-      <el-tooltip class="box-item" effect="dark" content="刷新" placement="bottom">
-        <div class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 hover:bg-gray-200"
-             @click="handleRefresh">
-          <el-icon>
-            <Refresh/>
-          </el-icon>
-        </div>
-      </el-tooltip>
+      <!-- 右边容器 -->
+      <div class="ml-auto flex">
+        <!-- 点击刷新页面 -->
+        <el-tooltip class="box-item" effect="dark" content="刷新" placement="bottom">
+          <div class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 hover:bg-gray-200"
+               @click="handleRefresh">
+            <el-icon>
+              <Refresh/>
+            </el-icon>
+          </div>
+        </el-tooltip>
 
-      <!-- 点击全屏展示 -->
-      <el-tooltip class="box-item" effect="dark" content="全屏" placement="bottom">
-        <div
-            class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 mr-2 hover:bg-gray-200"
-            @click="toggle">
-          <el-icon>
-            <FullScreen v-if="!isFullscreen"/>
-            <Aim v-else/>
-          </el-icon>
+        <!-- 点击全屏展示 -->
+        <el-tooltip class="box-item" effect="dark" content="全屏" placement="bottom">
+          <div
+              class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 mr-2 hover:bg-gray-200"
+              @click="toggle">
+            <el-icon>
+              <FullScreen v-if="!isFullscreen"/>
+              <Aim v-else/>
+            </el-icon>
 
-        </div>
-      </el-tooltip>
+          </div>
+        </el-tooltip>
 
-      <!-- 登录用户头像 -->
-      <el-dropdown class="flex items-center justify-center" @command="handleCommand">
+        <!-- 登录用户头像 -->
+        <el-dropdown class="flex items-center justify-center" @command="handleCommand">
                 <span class="el-dropdown-link flex items-center justify-center text-gray-700 text-xs">
                     <!-- 头像 Avatar -->
                     <el-avatar class="mr-2" :size="25"
@@ -47,16 +49,16 @@
                         <arrow-down/>
                     </el-icon>
                 </span>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="updatePassword">修改密码</el-dropdown-item>
-            <el-dropdown-item command="logout">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="updatePassword">修改密码</el-dropdown-item>
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
-  </div>
-
+  </el-affix>
   <!-- 修改密码 -->
   <!--  <el-dialog v-model="dialogVisible" title="修改密码" width="40%" :draggable ="true" :close-on-click-modal="false" :close-on-press-escape="false">-->
   <!--    <el-form ref="formRef" :rules="rules" :model="form">-->
