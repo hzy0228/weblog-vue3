@@ -13,8 +13,22 @@
       </div>
 
 
+
+
       <!-- 右边容器 -->
       <div class="ml-auto flex">
+
+        <!-- 点击跳转前台首页 -->
+        <el-tooltip class="box-item" effect="dark" content="跳转前台" placement="bottom">
+          <div class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 hover:bg-gray-200"
+               @click="router.push('/')">
+            <el-icon>
+              <Monitor />
+            </el-icon>
+          </div>
+        </el-tooltip>
+
+
         <!-- 点击刷新页面 -->
         <el-tooltip class="box-item" effect="dark" content="刷新" placement="bottom">
           <div class="w-[42px] h-[64px] cursor-pointer flex items-center justify-center text-gray-700 hover:bg-gray-200"
@@ -24,6 +38,7 @@
             </el-icon>
           </div>
         </el-tooltip>
+
 
         <!-- 点击全屏展示 -->
         <el-tooltip class="box-item" effect="dark" content="全屏" placement="bottom">
@@ -37,6 +52,8 @@
 
           </div>
         </el-tooltip>
+
+
 
         <!-- 登录用户头像 -->
         <el-dropdown class="flex items-center justify-center" @command="handleCommand">

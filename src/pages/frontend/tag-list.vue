@@ -44,6 +44,9 @@
 
   </main>
 
+  <!-- 返回顶部 -->
+  <ScrollToTopButton></ScrollToTopButton>
+
   <Footer></Footer>
 </template>
 
@@ -55,6 +58,7 @@ import CategoryListCard from '@/layouts/frontend/components/CategoryListCard.vue
 import {getTagList} from '@/api/frontend/tag.js'
 import {ref} from 'vue'
 import { useRouter } from 'vue-router'
+import ScrollToTopButton from '@/layouts/frontend/components/ScrollToTopButton.vue'
 
 const router = useRouter()
 // 所有标签

@@ -34,6 +34,7 @@
 
       <!-- 分页列表 -->
       <el-table :data="tableData" border stripe style="width: 100%" v-loading="tableLoading">
+        <el-table-column prop="id" label="ID" width="50" />
         <el-table-column prop="title" label="标题" width="380"/>
         <el-table-column prop="cover" label="封面" width="180">
           <template #default="scope">
@@ -49,6 +50,11 @@
               </el-icon>
               编辑
             </el-button>
+            <el-button size="small" @click="goArticleDetailPage(scope.row.id)">
+              <el-icon class="mr-1">
+                <View />
+              </el-icon>
+              预览</el-button>
             <el-button type="danger" size="small" @click="deleteArticleSubmit(scope.row)">
               <el-icon class="mr-1">
                 <Delete/>
@@ -214,6 +220,9 @@ import 'md-editor-v3/lib/style.css'
 import {uploadFile} from '@/api/admin/file'
 import {getCategorySelectList} from '@/api/admin/category'
 import {getTagSelectList, searchTags} from '@/api/admin/tag'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // 是否显示编辑文章对话框
 const isArticleUpdateEditorShow = ref(false)
@@ -549,6 +558,12 @@ const updateSubmit = () => {
     })
   })
 }
+
+// 跳转文章详情页
+const goArticleDetailPage = (articleId) => {
+  router.push('/article/' + articleId)
+}
+
 </script>
 
 <style scoped>
